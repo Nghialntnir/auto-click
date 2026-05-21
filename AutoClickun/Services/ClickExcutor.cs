@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AutoClickun.Models;
 
@@ -37,18 +33,15 @@ namespace AutoClickun.Services
             int offsetSleepMs,
             CancellationToken token)
         {
-            // Chạy vòng lặp trên một luồng nền tách biệt hoàn toàn với UI
+            // Luồng tách biệt với UI
             await Task.Run(() =>
             {
                 int currentLoop = 0;
 
-                // Vòng lặp tổng của cả kịch bản
                 while (isRepeatUntilStopped || currentLoop < numRepeatTimes)
                 {
-                    // Kiểm tra xem người dùng có bấm STOP (yêu cầu hủy luồng) chưa
                     if (token.IsCancellationRequested) break;
 
-                    // Duyệt tuần tự qua từng hành động trong kịch bản
                     foreach (var action in scriptList)
                     {
                         if (token.IsCancellationRequested) break;
@@ -63,7 +56,7 @@ namespace AutoClickun.Services
                             finalY += _rand.Next(-offsetXYPixels, offsetXYPixels + 1);
                         }
 
-                        // Di chuyển chuột đến vị trí thực tế sau khi tính sai số
+                        // Position +-offsetXY
                         Cursor.Position = new Point(finalX, finalY);
 
                         // 2. PHÁT LỆNH CLICK HỆ THỐNG
@@ -75,14 +68,10 @@ namespace AutoClickun.Services
 
                         if (enableOffsetSleep && offsetSleepMs > 0)
                         {
-                            // Cộng hoặc trừ ngẫu nhiên một khoảng mili-giây
-                            finalSleepTime += _rand.Next(-offsetSleepMs, offsetSleepMs + 1);
+                            int offset = _rand.Next(0, offsetSleepMs + 1);
+                            finalSleepTime += offset;
                         }
-
-                        // Kiểm tra an toàn chặn dưới để tránh lỗi Windows ngủ số âm
                         finalSleepTime = Math.Max(10, finalSleepTime);
-
-                        // Đóng băng luồng nền trong khoảng thời gian biến thiên
                         Thread.Sleep(finalSleepTime);
                     }
 

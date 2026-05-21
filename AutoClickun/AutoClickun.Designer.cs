@@ -53,6 +53,9 @@
             this.numRepeatTimes = new System.Windows.Forms.NumericUpDown();
             this.rdbRepeatUntilStopped = new System.Windows.Forms.RadioButton();
             this.grpCursor = new System.Windows.Forms.GroupBox();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.rdbCurrentLoc = new System.Windows.Forms.RadioButton();
             this.rdbPickLoc = new System.Windows.Forms.RadioButton();
             this.btnPickLocation = new System.Windows.Forms.Button();
@@ -351,6 +354,9 @@
             // 
             // grpCursor
             // 
+            this.grpCursor.Controls.Add(this.btnSave);
+            this.grpCursor.Controls.Add(this.label1);
+            this.grpCursor.Controls.Add(this.textBox1);
             this.grpCursor.Controls.Add(this.rdbCurrentLoc);
             this.grpCursor.Controls.Add(this.rdbPickLoc);
             this.grpCursor.Controls.Add(this.btnPickLocation);
@@ -366,6 +372,34 @@
             this.grpCursor.TabIndex = 3;
             this.grpCursor.TabStop = false;
             this.grpCursor.Text = "Cursor position";
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(553, 53);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(47, 22);
+            this.btnSave.TabIndex = 6;
+            this.btnSave.Text = "Save";
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(389, 56);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(83, 22);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Await (ms):";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(480, 53);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(65, 22);
+            this.textBox1.TabIndex = 7;
+            this.textBox1.Text = "0";
             // 
             // rdbCurrentLoc
             // 
@@ -398,7 +432,7 @@
             // 
             // lblX
             // 
-            this.lblX.Location = new System.Drawing.Point(377, 31);
+            this.lblX.Location = new System.Drawing.Point(372, 25);
             this.lblX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblX.Name = "lblX";
             this.lblX.Size = new System.Drawing.Size(24, 21);
@@ -407,7 +441,7 @@
             // 
             // txtX
             // 
-            this.txtX.Location = new System.Drawing.Point(400, 30);
+            this.txtX.Location = new System.Drawing.Point(404, 23);
             this.txtX.Margin = new System.Windows.Forms.Padding(4);
             this.txtX.Name = "txtX";
             this.txtX.ReadOnly = true;
@@ -417,7 +451,7 @@
             // 
             // lblY
             // 
-            this.lblY.Location = new System.Drawing.Point(477, 30);
+            this.lblY.Location = new System.Drawing.Point(477, 25);
             this.lblY.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblY.Name = "lblY";
             this.lblY.Size = new System.Drawing.Size(22, 22);
@@ -426,7 +460,7 @@
             // 
             // txtY
             // 
-            this.txtY.Location = new System.Drawing.Point(507, 30);
+            this.txtY.Location = new System.Drawing.Point(507, 23);
             this.txtY.Margin = new System.Windows.Forms.Padding(4);
             this.txtY.Name = "txtY";
             this.txtY.ReadOnly = true;
@@ -456,6 +490,7 @@
             this.listBoxScript.Name = "listBoxScript";
             this.listBoxScript.Size = new System.Drawing.Size(293, 324);
             this.listBoxScript.TabIndex = 0;
+            this.listBoxScript.SelectedIndexChanged += new System.EventHandler(this.listBoxScript_SelectedIndexChanged);
             // 
             // btnClearScript
             // 
@@ -551,6 +586,9 @@
         private System.Windows.Forms.Button btnClearScript;
         private System.Windows.Forms.Button btnStartStop;
         private System.Windows.Forms.Label lblX;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 

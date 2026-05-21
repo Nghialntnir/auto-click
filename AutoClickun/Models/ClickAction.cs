@@ -14,7 +14,7 @@ namespace AutoClickun.Models
 
         public override string ToString()
         {
-            return $"📍 Location: ({Position.X}, {Position.Y}) | ⏳ Waiting: {DelayMs}ms";
+            return $"📍 Location: ({Position.X}, {Position.Y}) \n⏳ Waiting: {DelayMs}ms";
         }
     }
 }
