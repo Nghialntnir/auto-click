@@ -64,6 +64,8 @@
             this.lblY = new System.Windows.Forms.Label();
             this.txtY = new System.Windows.Forms.TextBox();
             this.grpScript = new System.Windows.Forms.GroupBox();
+            this.btnSelectScript = new System.Windows.Forms.Button();
+            this.btnSaveScript = new System.Windows.Forms.Button();
             this.listBoxScript = new System.Windows.Forms.ListBox();
             this.btnClearScript = new System.Windows.Forms.Button();
             this.btnStartStop = new System.Windows.Forms.Button();
@@ -198,7 +200,7 @@
             this.numOffsetSleep.Size = new System.Drawing.Size(67, 22);
             this.numOffsetSleep.TabIndex = 9;
             this.numOffsetSleep.Value = new decimal(new int[] {
-            40,
+            30,
             0,
             0,
             0});
@@ -233,7 +235,7 @@
             this.numOffsetXY.Size = new System.Drawing.Size(67, 22);
             this.numOffsetXY.TabIndex = 12;
             this.numOffsetXY.Value = new decimal(new int[] {
-            5,
+            3,
             0,
             0,
             0});
@@ -324,7 +326,7 @@
             this.rdbRepeatTimes.Location = new System.Drawing.Point(20, 25);
             this.rdbRepeatTimes.Margin = new System.Windows.Forms.Padding(4);
             this.rdbRepeatTimes.Name = "rdbRepeatTimes";
-            this.rdbRepeatTimes.Size = new System.Drawing.Size(120, 24);
+            this.rdbRepeatTimes.Size = new System.Drawing.Size(85, 24);
             this.rdbRepeatTimes.TabIndex = 0;
             this.rdbRepeatTimes.Text = "Repeat";
             // 
@@ -368,38 +370,38 @@
             this.grpCursor.Margin = new System.Windows.Forms.Padding(4);
             this.grpCursor.Name = "grpCursor";
             this.grpCursor.Padding = new System.Windows.Forms.Padding(4);
-            this.grpCursor.Size = new System.Drawing.Size(613, 80);
+            this.grpCursor.Size = new System.Drawing.Size(613, 100);
             this.grpCursor.TabIndex = 3;
             this.grpCursor.TabStop = false;
             this.grpCursor.Text = "Cursor position";
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(553, 53);
+            this.btnSave.Location = new System.Drawing.Point(501, 57);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(47, 22);
+            this.btnSave.Size = new System.Drawing.Size(92, 39);
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "Save";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(389, 56);
+            this.label1.Location = new System.Drawing.Point(313, 74);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 22);
+            this.label1.Size = new System.Drawing.Size(75, 22);
             this.label1.TabIndex = 8;
             this.label1.Text = "Await (ms):";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(480, 53);
+            this.textBox1.Location = new System.Drawing.Point(390, 70);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(65, 22);
+            this.textBox1.Size = new System.Drawing.Size(103, 22);
             this.textBox1.TabIndex = 7;
-            this.textBox1.Text = "0";
+            this.textBox1.Text = "2000";
             // 
             // rdbCurrentLoc
             // 
@@ -470,6 +472,8 @@
             // 
             // grpScript
             // 
+            this.grpScript.Controls.Add(this.btnSelectScript);
+            this.grpScript.Controls.Add(this.btnSaveScript);
             this.grpScript.Controls.Add(this.listBoxScript);
             this.grpScript.Controls.Add(this.btnClearScript);
             this.grpScript.Location = new System.Drawing.Point(647, 15);
@@ -481,6 +485,26 @@
             this.grpScript.TabStop = false;
             this.grpScript.Text = "Script Location List";
             // 
+            // btnSelectScript
+            // 
+            this.btnSelectScript.Location = new System.Drawing.Point(226, 359);
+            this.btnSelectScript.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSelectScript.Name = "btnSelectScript";
+            this.btnSelectScript.Size = new System.Drawing.Size(95, 34);
+            this.btnSelectScript.TabIndex = 3;
+            this.btnSelectScript.Text = "Select Script";
+            this.btnSelectScript.Click += new System.EventHandler(this.btnSelectScript_Click);
+            // 
+            // btnSaveScript
+            // 
+            this.btnSaveScript.Location = new System.Drawing.Point(115, 359);
+            this.btnSaveScript.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSaveScript.Name = "btnSaveScript";
+            this.btnSaveScript.Size = new System.Drawing.Size(95, 34);
+            this.btnSaveScript.TabIndex = 2;
+            this.btnSaveScript.Text = "Save Script";
+            this.btnSaveScript.Click += new System.EventHandler(this.btnSaveScript_Click);
+            // 
             // listBoxScript
             // 
             this.listBoxScript.FormattingEnabled = true;
@@ -490,14 +514,13 @@
             this.listBoxScript.Name = "listBoxScript";
             this.listBoxScript.Size = new System.Drawing.Size(293, 324);
             this.listBoxScript.TabIndex = 0;
-            this.listBoxScript.SelectedIndexChanged += new System.EventHandler(this.listBoxScript_SelectedIndexChanged);
             // 
             // btnClearScript
             // 
-            this.btnClearScript.Location = new System.Drawing.Point(16, 359);
+            this.btnClearScript.Location = new System.Drawing.Point(4, 359);
             this.btnClearScript.Margin = new System.Windows.Forms.Padding(4);
             this.btnClearScript.Name = "btnClearScript";
-            this.btnClearScript.Size = new System.Drawing.Size(295, 34);
+            this.btnClearScript.Size = new System.Drawing.Size(95, 34);
             this.btnClearScript.TabIndex = 1;
             this.btnClearScript.Text = "Clear Script";
             this.btnClearScript.Click += new System.EventHandler(this.btnClearScript_Click);
@@ -507,12 +530,12 @@
             this.btnStartStop.BackColor = System.Drawing.Color.Green;
             this.btnStartStop.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
             this.btnStartStop.ForeColor = System.Drawing.Color.White;
-            this.btnStartStop.Location = new System.Drawing.Point(16, 431);
+            this.btnStartStop.Location = new System.Drawing.Point(16, 457);
             this.btnStartStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(957, 55);
             this.btnStartStop.TabIndex = 5;
-            this.btnStartStop.Text = "START (F6)";
+            this.btnStartStop.Text = "START (Enter)";
             this.btnStartStop.UseVisualStyleBackColor = false;
             this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
@@ -520,7 +543,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(992, 506);
+            this.ClientSize = new System.Drawing.Size(995, 525);
             this.Controls.Add(this.grpInterval);
             this.Controls.Add(this.grpClickOptions);
             this.Controls.Add(this.grpRepeat);
@@ -589,6 +612,8 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnSelectScript;
+        private System.Windows.Forms.Button btnSaveScript;
     }
 }
 

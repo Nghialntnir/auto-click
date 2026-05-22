@@ -3,6 +3,8 @@ using AutoClickun.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -26,15 +28,14 @@ namespace AutoClickun
             cmbMouseBtn.SelectedIndex = 0;   // Left
             cmbClickType.SelectedIndex = 0;  // Single
 
-            // Hotkey F6 Start/Stop
             this.KeyPreview = true;
             this.KeyDown += AutoClickun_KeyDown;
         }
 
-        // ─── F6 Hotkey ───────────────────────────────────────────
+        // ─── Hotkey ───────────────────────────────────────────
         private void AutoClickun_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F6)
+            if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
                 btnStartStop_Click(sender, e);
         }
 
@@ -110,6 +111,166 @@ namespace AutoClickun
         {
             _scriptList.Clear();
             listBoxScript.Items.Clear();
+        }
+
+        // ─── Save script ra file .acs (JSON) ─────────────────────
+        private void btnSaveScript_Click(object sender, EventArgs e)
+        {
+            if (_scriptList.Count == 0)
+            {
+                MessageBox.Show("Script list đang trống, không có gì để lưu!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (var dlg = new SaveFileDialog())
+            {
+                dlg.Title = "Lưu kịch bản";
+                dlg.Filter = "AutoClick Script (*.acs)|*.acs|JSON (*.json)|*.json";
+                dlg.DefaultExt = "acs";
+                dlg.FileName = "script";
+
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                var sb = new StringBuilder();
+                sb.AppendLine("[");
+                for (int i = 0; i < _scriptList.Count; i++)
+                {
+                    var a = _scriptList[i];
+                    sb.Append("  { ");
+                    sb.Append($"\"X\": {a.Position.X}, ");
+                    sb.Append($"\"Y\": {a.Position.Y}, ");
+                    sb.Append($"\"DelayMs\": {a.DelayMs}");
+                    sb.Append(" }");
+                    if (i < _scriptList.Count - 1) sb.Append(",");
+                    sb.AppendLine();
+                }
+                sb.AppendLine("]");
+
+                File.WriteAllText(dlg.FileName, sb.ToString(), Encoding.UTF8);
+
+                MessageBox.Show($"Đã lưu {_scriptList.Count} action vào:\n{dlg.FileName}",
+                    "Lưu thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // ─── Load script từ file .acs (JSON) ─────────────────────
+        private void btnSelectScript_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new OpenFileDialog())
+            {
+                dlg.Title = "Mở kịch bản";
+                dlg.Filter = "AutoClick Script (*.acs)|*.acs|JSON (*.json)|*.json|Tất cả|*.*";
+
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                try
+                {
+                    string content = File.ReadAllText(dlg.FileName, Encoding.UTF8);
+                    var loaded = ParseScriptJson(content);
+
+                    if (loaded.Count == 0)
+                    {
+                        MessageBox.Show("File không có action nào hợp lệ!", "Lỗi",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    // Hỏi ghi đè hay append nếu list đang có dữ liệu
+                    if (_scriptList.Count > 0)
+                    {
+                        var confirm = MessageBox.Show(
+                            "Script list hiện tại đang có dữ liệu.\n\n" +
+                            "Yes  = Ghi đè\n" +
+                            "No   = Thêm vào cuối\n" +
+                            "Cancel = Hủy",
+                            "Xác nhận",
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
+
+                        if (confirm == DialogResult.Cancel) return;
+
+                        if (confirm == DialogResult.Yes)
+                        {
+                            _scriptList.Clear();
+                            listBoxScript.Items.Clear();
+                        }
+                    }
+
+                    foreach (var action in loaded)
+                    {
+                        _scriptList.Add(action);
+                        listBoxScript.Items.Add(action.ToString());
+                    }
+
+                    MessageBox.Show($"Đã load {loaded.Count} action từ file.", "Load thành công",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi đọc file:\n{ex.Message}", "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        // ─── Parser JSON thủ công (không cần Newtonsoft) ─────────
+        private List<ClickAction> ParseScriptJson(string json)
+        {
+            var list = new List<ClickAction>();
+            int i = 0;
+
+            while (i < json.Length)
+            {
+                int start = json.IndexOf('{', i);
+                if (start < 0) break;
+                int end = json.IndexOf('}', start);
+                if (end < 0) break;
+
+                string obj = json.Substring(start + 1, end - start - 1);
+
+                int x = ParseJsonInt(obj, "X");
+                int y = ParseJsonInt(obj, "Y");
+                int delay = ParseJsonInt(obj, "DelayMs");
+
+                if (x >= 0 && y >= 0 && delay >= 0)
+                {
+                    list.Add(new ClickAction
+                    {
+                        Position = new Point(x, y),
+                        DelayMs = delay
+                    });
+                }
+
+                i = end + 1;
+            }
+
+            return list;
+        }
+
+        private int ParseJsonInt(string obj, string key)
+        {
+            string search = $"\"{key}\"";
+            int keyIdx = obj.IndexOf(search);
+            if (keyIdx < 0) return -1;
+
+            int colonIdx = obj.IndexOf(':', keyIdx + search.Length);
+            if (colonIdx < 0) return -1;
+
+            int numStart = colonIdx + 1;
+            while (numStart < obj.Length &&
+                   (obj[numStart] == ' ' || obj[numStart] == '\t'))
+                numStart++;
+
+            int numEnd = numStart;
+            while (numEnd < obj.Length &&
+                   (char.IsDigit(obj[numEnd]) || obj[numEnd] == '-'))
+                numEnd++;
+
+            if (int.TryParse(obj.Substring(numStart, numEnd - numStart), out int val))
+                return val;
+
+            return -1;
         }
 
         // ─── Start / Stop ─────────────────────────────────────────
@@ -195,12 +356,12 @@ namespace AutoClickun
 
             if (running)
             {
-                btnStartStop.Text = "STOP (F6)";
+                btnStartStop.Text = "STOP (Enter)";
                 btnStartStop.BackColor = Color.Red;
             }
             else
             {
-                btnStartStop.Text = "START (F6)";
+                btnStartStop.Text = "START (Enter)";
                 btnStartStop.BackColor = Color.Green;
             }
 
@@ -212,10 +373,5 @@ namespace AutoClickun
             btnClearScript.Enabled = !running;
         }
         private void AutoClickun_Load(object sender, EventArgs e) { }
-
-        private void listBoxScript_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
