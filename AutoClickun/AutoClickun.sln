@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoClickun", "AutoClickun.csproj", "{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup_AutoClickun", "..\Setup_AutoClickun\Setup_AutoClickun.vdproj", "{EA08E2F5-CCFF-438D-9DC4-6FA23A58C289}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA08E2F5-CCFF-438D-9DC4-6FA23A58C289}.Debug|Any CPU.ActiveCfg = Debug
+		{EA08E2F5-CCFF-438D-9DC4-6FA23A58C289}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

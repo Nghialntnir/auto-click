@@ -1,0 +1,10 @@
+D:\Computer Science\auto-click\AutoClickun\bin\Release\AutoClickun.exe.config
+D:\Computer Science\auto-click\AutoClickun\bin\Release\AutoClickun.exe
+D:\Computer Science\auto-click\AutoClickun\bin\Release\AutoClickun.pdb
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.csproj.AssemblyReference.cache
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.AutoClickun.resources
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.Properties.Resources.resources
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.csproj.GenerateResource.cache
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.csproj.CoreCompileInputs.cache
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.exe
+D:\Computer Science\auto-click\AutoClickun\obj\Release\AutoClickun.pdb
