@@ -12,51 +12,46 @@ namespace AutoClickun
 {
     public partial class AutoClickun : Form
     {
-        // ─── State ───────────────────────────────────────────────
         private List<ClickAction> _scriptList = new List<ClickAction>();
         private CancellationTokenSource _cts;
         private bool _isRunning = false;
-
-        // Dùng để pick location: sau khi bấm Pick, hook chuột toàn cục
         private bool _isPicking = false;
+        private int _dragSourceIndex = -1;
 
         public AutoClickun()
         {
             InitializeComponent();
-
-            // Gán giá trị mặc định cho combo (tránh lỗi nếu user không chọn)
-            cmbMouseBtn.SelectedIndex = 0;   // Left
-            cmbClickType.SelectedIndex = 0;  // Single
+            cmbMouseBtn.SelectedIndex = 0;
 
             this.KeyPreview = true;
             this.KeyDown += AutoClickun_KeyDown;
+
+            listBoxScript.AllowDrop = true;
+            listBoxScript.MouseDown += listBoxScript_MouseDown;
+            listBoxScript.MouseMove += listBoxScript_MouseMove;
+            listBoxScript.DragOver += listBoxScript_DragOver;
+            listBoxScript.DragDrop += listBoxScript_DragDrop;
         }
 
-        // ─── Hotkey ───────────────────────────────────────────
         private void AutoClickun_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return || e.KeyCode == Keys.Enter)
                 btnStartStop_Click(sender, e);
+            if (e.KeyCode == Keys.Delete && listBoxScript.Focused)
+                DeleteSelectedLine();
         }
 
-        // ─── Pick Location ───────────────────────────────────────
         private void btnPickLocation_Click(object sender, EventArgs e)
         {
-            // Chọn radio Pick loc
             rdbPickLoc.Checked = true;
-
-            // Thu nhỏ form để không che khuất màn hình
             this.WindowState = FormWindowState.Minimized;
-
             _isPicking = true;
             btnPickLocation.Text = "Đang chờ click...";
 
-            // Dùng timer poll vị trí chuột khi user click chuột trái
             var pickTimer = new System.Windows.Forms.Timer();
             pickTimer.Interval = 50;
             pickTimer.Tick += (s, ev) =>
             {
-                // Phát hiện click trái
                 if ((Win32Api.GetAsyncKeyState(0x01) & 0x8000) != 0 && _isPicking)
                 {
                     _isPicking = false;
@@ -67,7 +62,6 @@ namespace AutoClickun
                     txtX.Text = pos.X.ToString();
                     txtY.Text = pos.Y.ToString();
 
-                    // Khôi phục form
                     this.WindowState = FormWindowState.Normal;
                     this.Activate();
                     btnPickLocation.Text = "Pick location";
@@ -76,7 +70,6 @@ namespace AutoClickun
             pickTimer.Start();
         }
 
-        // ─── Save action vào script list ─────────────────────────
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(txtX.Text, out int x) || !int.TryParse(txtY.Text, out int y))
@@ -86,34 +79,100 @@ namespace AutoClickun
                 return;
             }
 
-            if (!int.TryParse(textBox1.Text, out int delayMs) || delayMs < 0)
+            if (!int.TryParse(tbNumAwait.Text, out int delayMs) || delayMs < 0)
             {
                 MessageBox.Show("Await phải là số nguyên dương (ms)!", "Lỗi",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            int clickCount = (int)numClickCount.Value;
+            if (clickCount < 1) clickCount = 1;
+
             var action = new ClickAction
             {
                 Position = new Point(x, y),
-                DelayMs = delayMs
+                DelayMs = delayMs,
+                ClickCount = clickCount
             };
 
             _scriptList.Add(action);
             listBoxScript.Items.Add(action.ToString());
 
-            // Reset textBox1 về default sau khi save
-            textBox1.Text = "2000";
+            tbNumAwait.Text = "1000";
+            numClickCount.Value = 1;
         }
 
-        // ─── Clear script list ────────────────────────────────────
+        // ─── Xóa dòng — cả Designer (Click_1) lẫn hotkey đều gọi về đây ───
+        private void btnDeleteALine_Click(object sender, EventArgs e) => DeleteSelectedLine();
+        private void btnDeleteALine_Click_1(object sender, EventArgs e) => DeleteSelectedLine();
+
+        private void DeleteSelectedLine()
+        {
+            int idx = listBoxScript.SelectedIndex;
+            if (idx < 0)
+            {
+                MessageBox.Show("Hãy chọn một dòng để xóa!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            _scriptList.RemoveAt(idx);
+            listBoxScript.Items.RemoveAt(idx);
+
+            if (listBoxScript.Items.Count > 0)
+                listBoxScript.SelectedIndex = Math.Min(idx, listBoxScript.Items.Count - 1);
+        }
+
+        // ─── Drag & Drop ─────────────────────────────────────────
+        private void listBoxScript_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                _dragSourceIndex = listBoxScript.IndexFromPoint(e.Location);
+        }
+
+        private void listBoxScript_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && _dragSourceIndex >= 0)
+            {
+                listBoxScript.DoDragDrop(_dragSourceIndex, DragDropEffects.Move);
+                _dragSourceIndex = -1;
+            }
+        }
+
+        private void listBoxScript_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void listBoxScript_DragDrop(object sender, DragEventArgs e)
+        {
+            Point clientPoint = listBoxScript.PointToClient(new Point(e.X, e.Y));
+            int targetIndex = listBoxScript.IndexFromPoint(clientPoint);
+
+            if (targetIndex < 0)
+                targetIndex = listBoxScript.Items.Count - 1;
+
+            int sourceIndex = (int)e.Data.GetData(typeof(int));
+            if (sourceIndex == targetIndex) return;
+
+            var action = _scriptList[sourceIndex];
+            _scriptList.RemoveAt(sourceIndex);
+            _scriptList.Insert(targetIndex, action);
+
+            var itemText = listBoxScript.Items[sourceIndex];
+            listBoxScript.Items.RemoveAt(sourceIndex);
+            listBoxScript.Items.Insert(targetIndex, itemText);
+
+            listBoxScript.SelectedIndex = targetIndex;
+        }
+
         private void btnClearScript_Click(object sender, EventArgs e)
         {
             _scriptList.Clear();
             listBoxScript.Items.Clear();
         }
 
-        // ─── Save script ra file .acs (JSON) ─────────────────────
         private void btnSaveScript_Click(object sender, EventArgs e)
         {
             if (_scriptList.Count == 0)
@@ -140,7 +199,8 @@ namespace AutoClickun
                     sb.Append("  { ");
                     sb.Append($"\"X\": {a.Position.X}, ");
                     sb.Append($"\"Y\": {a.Position.Y}, ");
-                    sb.Append($"\"DelayMs\": {a.DelayMs}");
+                    sb.Append($"\"DelayMs\": {a.DelayMs}, ");
+                    sb.Append($"\"ClickCount\": {a.ClickCount}");
                     sb.Append(" }");
                     if (i < _scriptList.Count - 1) sb.Append(",");
                     sb.AppendLine();
@@ -148,13 +208,11 @@ namespace AutoClickun
                 sb.AppendLine("]");
 
                 File.WriteAllText(dlg.FileName, sb.ToString(), Encoding.UTF8);
-
                 MessageBox.Show($"Đã lưu {_scriptList.Count} action vào:\n{dlg.FileName}",
                     "Lưu thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        // ─── Load script từ file .acs (JSON) ─────────────────────
         private void btnSelectScript_Click(object sender, EventArgs e)
         {
             using (var dlg = new OpenFileDialog())
@@ -176,20 +234,14 @@ namespace AutoClickun
                         return;
                     }
 
-                    // Hỏi ghi đè hay append nếu list đang có dữ liệu
                     if (_scriptList.Count > 0)
                     {
                         var confirm = MessageBox.Show(
                             "Script list hiện tại đang có dữ liệu.\n\n" +
-                            "Yes  = Ghi đè\n" +
-                            "No   = Thêm vào cuối\n" +
-                            "Cancel = Hủy",
-                            "Xác nhận",
-                            MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question);
+                            "Yes  = Ghi đè\nNo   = Thêm vào cuối\nCancel = Hủy",
+                            "Xác nhận", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                         if (confirm == DialogResult.Cancel) return;
-
                         if (confirm == DialogResult.Yes)
                         {
                             _scriptList.Clear();
@@ -214,7 +266,6 @@ namespace AutoClickun
             }
         }
 
-        // ─── Parser JSON thủ công (không cần Newtonsoft) ─────────
         private List<ClickAction> ParseScriptJson(string json)
         {
             var list = new List<ClickAction>();
@@ -232,13 +283,16 @@ namespace AutoClickun
                 int x = ParseJsonInt(obj, "X");
                 int y = ParseJsonInt(obj, "Y");
                 int delay = ParseJsonInt(obj, "DelayMs");
+                int clickCount = ParseJsonInt(obj, "ClickCount");
+                if (clickCount < 1) clickCount = 1;
 
                 if (x >= 0 && y >= 0 && delay >= 0)
                 {
                     list.Add(new ClickAction
                     {
                         Position = new Point(x, y),
-                        DelayMs = delay
+                        DelayMs = delay,
+                        ClickCount = clickCount
                     });
                 }
 
@@ -258,13 +312,11 @@ namespace AutoClickun
             if (colonIdx < 0) return -1;
 
             int numStart = colonIdx + 1;
-            while (numStart < obj.Length &&
-                   (obj[numStart] == ' ' || obj[numStart] == '\t'))
+            while (numStart < obj.Length && (obj[numStart] == ' ' || obj[numStart] == '\t'))
                 numStart++;
 
             int numEnd = numStart;
-            while (numEnd < obj.Length &&
-                   (char.IsDigit(obj[numEnd]) || obj[numEnd] == '-'))
+            while (numEnd < obj.Length && (char.IsDigit(obj[numEnd]) || obj[numEnd] == '-'))
                 numEnd++;
 
             if (int.TryParse(obj.Substring(numStart, numEnd - numStart), out int val))
@@ -273,17 +325,14 @@ namespace AutoClickun
             return -1;
         }
 
-        // ─── Start / Stop ─────────────────────────────────────────
         private async void btnStartStop_Click(object sender, EventArgs e)
         {
             if (_isRunning)
             {
-                // Dừng
                 _cts?.Cancel();
                 return;
             }
 
-            // Validate script
             if (_scriptList.Count == 0)
             {
                 MessageBox.Show("Script list đang trống! Hãy thêm ít nhất 1 vị trí.", "Lỗi",
@@ -291,87 +340,44 @@ namespace AutoClickun
                 return;
             }
 
-            // Đọc các tham số từ UI
             bool repeatUntilStopped = rdbRepeatUntilStopped.Checked;
             int numRepeat = (int)numRepeatTimes.Value;
-
             bool enableOffsetXY = chkRandomOffsetXY.Checked;
             int offsetXY = (int)numOffsetXY.Value;
-
             bool enableOffsetSleep = chkRandomOffsetSleep.Checked;
             int offsetSleep = (int)numOffsetSleep.Value;
 
-            // Nếu dùng "Current location" (không pick), override tất cả action bằng vị trí hiện tại
-            List<ClickAction> scriptToRun = new List<ClickAction>(_scriptList);
-            if (rdbCurrentLoc.Checked)
-            {
-                // Tính tổng delay từ numHours/Mins/Secs/Milli làm delay chung
-                int globalDelay = (int)(numHours.Value * 3600000
-                                      + numMins.Value * 60000
-                                      + numSecs.Value * 1000
-                                      + numMilli.Value);
+            var scriptToRun = new List<ClickAction>(_scriptList);
 
-                scriptToRun = new List<ClickAction>
-                {
-                    new ClickAction
-                    {
-                        Position = Cursor.Position,  // sẽ lấy lại lúc chạy
-                        DelayMs = globalDelay
-                    }
-                };
-            }
-
-            // Chuyển sang trạng thái RUNNING
             SetRunningState(true);
-
             _cts = new CancellationTokenSource();
-            var executor = new ClickExcutor();
 
             try
             {
-                await executor.StartExecutionAsync(
-                    scriptToRun,
-                    repeatUntilStopped,
-                    numRepeat,
-                    enableOffsetXY,
-                    offsetXY,
-                    enableOffsetSleep,
-                    offsetSleep,
+                await new ClickExcutor().StartExecutionAsync(
+                    scriptToRun, repeatUntilStopped, numRepeat,
+                    enableOffsetXY, offsetXY,
+                    enableOffsetSleep, offsetSleep,
                     _cts.Token);
             }
-            catch (OperationCanceledException)
-            {
-                // Bình thường — user bấm STOP
-            }
-            finally
-            {
-                SetRunningState(false);
-            }
+            catch (OperationCanceledException) { }
+            finally { SetRunningState(false); }
         }
 
-        // ─── Helper: đổi UI khi chạy / dừng ─────────────────────
         private void SetRunningState(bool running)
         {
             _isRunning = running;
+            btnStartStop.Text = running ? "STOP (Enter)" : "START (Enter)";
+            btnStartStop.BackColor = running ? Color.Red : Color.Green;
 
-            if (running)
-            {
-                btnStartStop.Text = "STOP (Enter)";
-                btnStartStop.BackColor = Color.Red;
-            }
-            else
-            {
-                btnStartStop.Text = "START (Enter)";
-                btnStartStop.BackColor = Color.Green;
-            }
-
-            // Khóa UI khi đang chạy
             grpInterval.Enabled = !running;
             grpClickOptions.Enabled = !running;
             grpRepeat.Enabled = !running;
             grpCursor.Enabled = !running;
             btnClearScript.Enabled = !running;
+            btnDeleteALine.Enabled = !running;
         }
+
         private void AutoClickun_Load(object sender, EventArgs e) { }
     }
 }

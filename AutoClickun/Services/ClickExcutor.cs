@@ -12,17 +12,12 @@ namespace AutoClickun.Services
     {
         private Random _rand = new Random();
 
+        private const uint MOUSEEVENTF_LEFTDOWN = 0x02;
+        private const uint MOUSEEVENTF_LEFTUP = 0x04;
+
         /// <summary>
         /// Thực thi danh sách kịch bản click một cách bất đồng bộ
         /// </summary>
-        /// <param name="scriptList">Danh sách các hành động cần click</param>
-        /// <param name="isRepeatUntilStopped">Lặp vô hạn hay chỉ chạy 1 lần</param>
-        /// <param name="numRepeatTimes">Số lần lặp (nếu chọn chạy hữu hạn)</param>
-        /// <param name="enableOffsetXY">Bật chống bot tọa độ không</param>
-        /// <param name="offsetXYPixels">Biên độ lệch tọa độ (pixel)</param>
-        /// <param name="enableOffsetSleep">Bật chống bot độ trễ không</param>
-        /// <param name="offsetSleepMs">Biên độ lệch thời gian (ms)</param>
-        /// <param name="token">Mã hủy luồng để dừng click ngay khi bấm STOP</param>
         public async Task StartExecutionAsync(
             List<ClickAction> scriptList,
             bool isRepeatUntilStopped,
@@ -33,7 +28,6 @@ namespace AutoClickun.Services
             int offsetSleepMs,
             CancellationToken token)
         {
-            // Luồng tách biệt với UI
             await Task.Run(() =>
             {
                 int currentLoop = 0;
@@ -46,7 +40,15 @@ namespace AutoClickun.Services
                     {
                         if (token.IsCancellationRequested) break;
 
-                        // 1. XỬ LÝ TỌA ĐỘ CLICK (CÓ OFFSET)
+                        // 1. XỬ LÝ THỜI GIAN NGỦ (CÓ OFFSET)
+                        int finalSleepTime = action.DelayMs;
+                        if (enableOffsetSleep && offsetSleepMs > 0)
+                            finalSleepTime += _rand.Next(0, offsetSleepMs + 1);
+
+                        finalSleepTime = Math.Max(10, finalSleepTime);
+                        Thread.Sleep(finalSleepTime);
+
+                        // 2. XỬ LÝ TỌA ĐỘ CLICK (CÓ OFFSET)
                         int finalX = action.Position.X;
                         int finalY = action.Position.Y;
 
@@ -56,23 +58,21 @@ namespace AutoClickun.Services
                             finalY += _rand.Next(-offsetXYPixels, offsetXYPixels + 1);
                         }
 
-                        // Position +-offsetXY
                         Cursor.Position = new Point(finalX, finalY);
 
-                        // 2. PHÁT LỆNH CLICK HỆ THỐNG
-                        Win32Api.mouse_event(0x02, 0, 0, 0, 0); // MOUSEEVENTF_LEFTDOWN
-                        Win32Api.mouse_event(0x04, 0, 0, 0, 0); // MOUSEEVENTF_LEFTUP
-
-                        // 3. XỬ LÝ THỜI GIAN NGỦ (CÓ OFFSET)
-                        int finalSleepTime = action.DelayMs;
-
-                        if (enableOffsetSleep && offsetSleepMs > 0)
+                        // 3. PHÁT LỆNH CLICK
+                        int clicks = action.ClickCount;
+                        for (int c = 0; c < clicks; c++)
                         {
-                            int offset = _rand.Next(0, offsetSleepMs + 1);
-                            finalSleepTime += offset;
+                            if (token.IsCancellationRequested) break;
+
+                            Win32Api.mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+                            Win32Api.mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);
+
+                            // Khoảng cách giữa 2 click trong double-click (~50ms)
+                            if (c < clicks - 1)
+                                Thread.Sleep(50);
                         }
-                        finalSleepTime = Math.Max(10, finalSleepTime);
-                        Thread.Sleep(finalSleepTime);
                     }
 
                     currentLoop++;
