@@ -1,121 +1,29 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Computer Science\\auto-click\\AutoClickun\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|D:\\Computer Science\\auto-click\\AutoClickun\\autoclickun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|solutionrelative:autoclickun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|d:\\computer science\\auto-click\\autoclickun\\autoclickun.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|solutionrelative:autoclickun.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|d:\\computer science\\auto-click\\autoclickun\\autoclickun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|solutionrelative:autoclickun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|d:\\computer science\\auto-click\\autoclickun\\services\\win32api.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|solutionrelative:services\\win32api.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|d:\\computer science\\auto-click\\autoclickun\\services\\clickexcutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|solutionrelative:services\\clickexcutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|d:\\computer science\\auto-click\\autoclickun\\models\\clickaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{984C8F22-A9D8-4E6F-AF07-E3CE3719EF7A}|AutoClickun.csproj|solutionrelative:models\\clickaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 246,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "DockedWidth": 79,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
-            },
+            }
+          ]
+        },
+        {
+          "DockedWidth": 331,
+          "SelectedChildIndex": -1,
+          "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AutoClickun.Designer.cs",
-              "DocumentMoniker": "D:\\Computer Science\\auto-click\\AutoClickun\\AutoClickun.Designer.cs",
-              "RelativeDocumentMoniker": "AutoClickun.Designer.cs",
-              "ToolTip": "D:\\Computer Science\\auto-click\\AutoClickun\\AutoClickun.Designer.cs",
-              "RelativeToolTip": "AutoClickun.Designer.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAqwCkCAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-23T16:02:01.663Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Win32Api.cs",
-              "DocumentMoniker": "D:\\Computer Science\\auto-click\\AutoClickun\\Services\\Win32Api.cs",
-              "RelativeDocumentMoniker": "Services\\Win32Api.cs",
-              "ToolTip": "D:\\Computer Science\\auto-click\\AutoClickun\\Services\\Win32Api.cs",
-              "RelativeToolTip": "Services\\Win32Api.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-23T16:00:50.455Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ClickAction.cs",
-              "DocumentMoniker": "D:\\Computer Science\\auto-click\\AutoClickun\\Models\\ClickAction.cs",
-              "RelativeDocumentMoniker": "Models\\ClickAction.cs",
-              "ToolTip": "D:\\Computer Science\\auto-click\\AutoClickun\\Models\\ClickAction.cs",
-              "RelativeToolTip": "Models\\ClickAction.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-23T16:00:29.271Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ClickExcutor.cs",
-              "DocumentMoniker": "D:\\Computer Science\\auto-click\\AutoClickun\\Services\\ClickExcutor.cs",
-              "RelativeDocumentMoniker": "Services\\ClickExcutor.cs",
-              "ToolTip": "D:\\Computer Science\\auto-click\\AutoClickun\\Services\\ClickExcutor.cs",
-              "RelativeToolTip": "Services\\ClickExcutor.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAAQwEoAAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-23T16:00:23.683Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AutoClickun.cs",
-              "DocumentMoniker": "D:\\Computer Science\\auto-click\\AutoClickun\\AutoClickun.cs",
-              "RelativeDocumentMoniker": "AutoClickun.cs",
-              "ToolTip": "D:\\Computer Science\\auto-click\\AutoClickun\\AutoClickun.cs",
-              "RelativeToolTip": "AutoClickun.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAcAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-22T15:12:02.508Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AutoClickun.cs [Design]",
-              "DocumentMoniker": "D:\\Computer Science\\auto-click\\AutoClickun\\AutoClickun.cs",
-              "RelativeDocumentMoniker": "AutoClickun.cs",
-              "ToolTip": "D:\\Computer Science\\auto-click\\AutoClickun\\AutoClickun.cs [Design]",
-              "RelativeToolTip": "AutoClickun.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-22T15:11:59.409Z",
-              "EditorCaption": " [Design]"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
