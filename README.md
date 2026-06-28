@@ -115,6 +115,6 @@ AutoClickun/
 
 ---
 
-## 📄 License
+## License
 
 MIT License — tự do sử dụng, chỉnh sửa và phân phối.
